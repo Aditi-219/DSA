@@ -1,67 +1,41 @@
-class Server implements Comparable<Server>{
-    int weightage;
-    int index;
-    int freeTime;
-    public Server(int weightage,int index){
-        this.weightage=weightage;
-        this.index=index;
-        this.freeTime=0;
-    }
-    // sorts free servers based on weightage, if tie, then sort by index (freeServers<>)
-    @Override
-    public int compareTo(Server other){
-        if(this.weightage==other.weightage){
-            return this.index-other.index;
-        }
-        return this.weightage-other.weightage;
-    }
-
-    //sorts busy servers based on freeTime,if tie, sort by weightage, if again tie, then sort by index (busyServers<>)
-    public static Comparator<Server> sortByFreeTime = (a,b) ->{
-        if(a.freeTime==b.freeTime){ 
-            if(a.weightage==b.weightage){ 
-                return a.index-b.index; 
-            }
-            return a.weightage-b.weightage;
-        } 
-        return a.freeTime-b.freeTime;
-    };
-}
 class Solution {
-    public int[] assignTasks(int[] servers, int[] tasks) {
-        int n=servers.length;
-        PriorityQueue<Server> freeServers=new PriorityQueue<>();
-        PriorityQueue<Server> busyServers=new PriorityQueue<>(Server.sortByFreeTime);
-        int ans[]=new int[tasks.length];
+public int[] assignTasks(int[] servers, int[] tasks) {
+    int n = servers.length;
+    int m = tasks.length;
+    int[] result = new int[m];
 
-        for(int i=0;i<n;i++){
-            freeServers.add(new Server(servers[i],i));
-        }
+    // PriorityQueue for available and busy servers
+    PriorityQueue<int[]> available = new PriorityQueue<>(Comparator.comparingInt((int[] a) -> a[0]).thenComparingInt(a -> a[1]));
+    PriorityQueue<int[]> busy = new PriorityQueue<>(Comparator.comparingInt((int[] a) -> a[0]));
 
-        int time=0;
-        for(int i=0;i<tasks.length;i++){
-            time=Math.max(time,i);
-            //remove all the servers which are completed their process 
-            while(!busyServers.isEmpty() && busyServers.peek().freeTime<=time){
-                Server server=busyServers.poll();
-                server.freeTime=0;
-                freeServers.add(server);
-            }
-            // if no servers are free , then remove the servers(When the freeTime is equal to the first busy server ) from the busyServers Queue and add it to freeServers
-            if(freeServers.isEmpty()){
-                time=busyServers.peek().freeTime;
-                while(!busyServers.isEmpty() && busyServers.peek().freeTime<=time){
-                    Server server=busyServers.poll();
-                    server.freeTime=0;
-                    freeServers.add(server);
-                }
-            }
-            Server server=freeServers.poll();
-            ans[i]=server.index;
-            server.freeTime=tasks[i]+time;
-            busyServers.add(server);
-            
-        }
-        return ans;
+    for (int i = 0; i < n; i++) {
+        available.offer(new int[] {servers[i], i});
     }
+
+    int time = 0;
+    for (int i = 0; i < m; i++) {
+        time = Math.max(time, i);
+
+        // Release servers that are no longer busy
+        while (!busy.isEmpty() && busy.peek()[0] <= time) {
+            int[] server = busy.poll();
+            available.offer(new int[] {servers[server[1]], server[1]});
+        }
+
+        // If no servers are available, jump the time to the next server free time
+        if (available.isEmpty()) {
+            time = busy.peek()[0];
+            while (!busy.isEmpty() && busy.peek()[0] <= time) {
+                int[] server = busy.poll();
+                available.offer(new int[] {servers[server[1]], server[1]});
+            }
+        }
+
+        int[] server = available.poll();
+        result[i] = server[1];
+        busy.offer(new int[] {time + tasks[i], server[1]});
+    }
+
+    return result;
+}
 }
