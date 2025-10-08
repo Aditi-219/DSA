@@ -1,19 +1,20 @@
 class Solution {
     public String countAndSay(int n) {
-        String res = "1";
-        for (int i = 1; i < n; i++) {
-            StringBuilder temp = new StringBuilder();
-            int count = 1;
-            for (int j = 1; j < res.length(); j++) {
-                if (res.charAt(j) == res.charAt(j - 1)) count++;
-                else {
-                    temp.append(count).append(res.charAt(j - 1));
-                    count = 1;
-                }
+        if (n == 1) return "1";
+
+        String prev = countAndSay(n - 1); // recursive call
+        StringBuilder sb = new StringBuilder();
+
+        int count = 1;
+        for (int i = 0; i < prev.length(); i++) {
+            // check next character or end of string
+            if (i + 1 < prev.length() && prev.charAt(i) == prev.charAt(i + 1)) {
+                count++;
+            } else {
+                sb.append(count).append(prev.charAt(i));
+                count = 1; // reset for next run
             }
-            temp.append(count).append(res.charAt(res.length() - 1));
-            res = temp.toString();     
         }
-        return res;
+        return sb.toString();
     }
 }
