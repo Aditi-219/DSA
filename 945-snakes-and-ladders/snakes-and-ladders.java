@@ -1,70 +1,56 @@
-import java.util.*;
-
 class Solution {
-
     public int snakesAndLadders(int[][] board) {
         int n = board.length;
 
-        // Step 1: Convert board to 1D mapping
-        int[] move = new int[n * n + 1];
-        Arrays.fill(move, -1);
-
-        int cell = 1;
-        boolean leftToRight = true;
-
-        for (int row = n - 1; row >= 0; row--) {
-            if (leftToRight) {
-                for (int col = 0; col < n; col++) {
-                    if (board[row][col] != -1) {
-                        move[cell] = board[row][col];
-                    }
-                    cell++;
-                }
-            } else {
-                for (int col = n - 1; col >= 0; col--) {
-                    if (board[row][col] != -1) {
-                        move[cell] = board[row][col];
-                    }
-                    cell++;
-                }
-            }
-            leftToRight = !leftToRight;
-        }
-
-        // Step 2: BFS for shortest path
-        Queue<Integer> queue = new LinkedList<>();
+        Queue<Integer> q = new LinkedList<>();
         boolean[] visited = new boolean[n * n + 1];
 
-        queue.offer(1);
+        q.offer(1);
         visited[1] = true;
 
-        int level = 0;
+        int moves = 0;
 
-        while (!queue.isEmpty()) {
-            int size = queue.size();
+        while (!q.isEmpty()) {
+            int size = q.size();
 
-            while (size-- > 0) {
-                int curr = queue.poll();
+            // One BFS level = one dice roll
+            for (int i = 0; i < size; i++) {
+                int curr = q.poll();
 
-                if (curr == n * n) {
-                    return level;
-                }
+                if (curr == n * n) return moves;
 
                 for (int dice = 1; dice <= 6; dice++) {
                     int next = curr + dice;
-                    if (next > n * n) break;
+                    if (next > n * n) continue;
 
-                    int destination = (move[next] != -1) ? move[next] : next;
+                    int[] pos = getCoord(next, n);
+                    int r = pos[0], c = pos[1];
 
-                    if (!visited[destination]) {
-                        visited[destination] = true;
-                        queue.offer(destination);
+                    if (board[r][c] != -1) {
+                        next = board[r][c];
+                    }
+
+                    if (!visited[next]) {
+                        visited[next] = true;
+                        q.offer(next);
                     }
                 }
             }
-            level++;
+            moves++;
+        }
+        return -1;
+    }
+
+    // Position → board coordinate
+    private int[] getCoord(int num, int n) {
+        int rowFromBottom = (num - 1) / n;
+        int row = n - 1 - rowFromBottom;
+
+        int col = (num - 1) % n;
+        if (rowFromBottom % 2 == 1) {
+            col = n - 1 - col;
         }
 
-        return -1;
+        return new int[]{row, col};
     }
 }
