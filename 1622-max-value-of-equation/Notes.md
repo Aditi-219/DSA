@@ -1,0 +1,1 @@
+<h2>max-value-of-equation Notes</h2><hr>[ Time taken: 18 hrs 38 m 54 s ]
