@@ -1,15 +1,18 @@
 class Solution {
     public List<Integer> selfDividingNumbers(int left, int right) {
-        List<Integer> list = new ArrayList<>();
+        List<Integer> result = new ArrayList<>();
         for (int i = left; i <= right; i++) {
-            char[] arr = Integer.toString(i).toCharArray();
-            int count = 0;
-            for (char c : arr) {
-                int num = c - '0';
-                if ((num != 0) && (i % num) == 0) count++;
-            }
-            if (count == arr.length) list.add(i);
+            if (isDivisible(i)) result.add(i);
         }
-        return list;
+        return result;
+    }
+    public boolean isDivisible(int num) {
+        int temp = num;
+        while (temp > 0) {
+            int rem = temp % 10;
+            if (rem == 0 || num % rem != 0) return false;
+            temp /= 10;
+        }
+        return true;
     }
 }
