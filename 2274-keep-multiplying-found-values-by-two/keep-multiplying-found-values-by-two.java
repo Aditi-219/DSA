@@ -1,8 +1,15 @@
 class Solution {
     public int findFinalValue(int[] nums, int original) {
-        Set<Integer> numSet = new HashSet<>();
-        for (int num : nums) numSet.add(num);
-        while (numSet.contains(original)) original *= 2;
-        return original;
+        while(true) {
+            boolean found = false;
+            for(int i = 0; i < nums.length; i++) {
+                if(nums[i] == original) {
+                    original = original * 2;
+                    found = true;
+                    break;
+                }
+            }
+            if(found == false) return original;
+        }
     }
 }
