@@ -31,16 +31,5 @@ class Solution {
         // if(n==1) return 1;
         // if(n==2) return 2;
         // return climbStairs(n-1)+climbStairs(n-2);
-
-    //     int prev1=2;
-    //     int prev2=1;
-    //     if (n==1) return prev2; 
-    //     else if (n==1) return prev1; 
-    //     for(int i=3;i<=n;i++){
-    //         int temp=prev2;
-    //         prev2=prev1;
-    //         prev1=prev1+temp;
-    //     }
-    //     return prev1;
     }
 }
