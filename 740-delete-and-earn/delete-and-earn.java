@@ -14,7 +14,6 @@ class Solution {
         for(int num:nums) arr[num]+=num;
         int []dp=new int[maxVal+1];
         Arrays.fill(dp,-1);
-        dp[0]=arr[0];dp[1]=arr[1];
         return solve(maxVal,arr,dp);
     }
 }
