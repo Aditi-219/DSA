@@ -12,12 +12,22 @@ class Solution {
         for(int num:nums) maxVal=Math.max(maxVal,num);
         int [] arr=new int[maxVal+1];
         for(int num:nums) arr[num]+=num;
-        int []dp=new int[maxVal+1];
-        dp[0] = arr[0]; dp[1] = arr[1];
+
+        int a=arr[0];int b=arr[1];
         for(int i=2;i<=maxVal;i++){
-            dp[i]=Math.max(dp[i-1],arr[i]+dp[i-2]);
+            int c=b;
+            b=Math.max(arr[i]+a,b);
+            a=c;
         }
-        return dp[maxVal];
+        return b;
+
+        // int []dp=new int[maxVal+1];
+        // dp[0] = arr[0]; dp[1] = arr[1];
+        // for(int i=2;i<=maxVal;i++){
+        //     dp[i]=Math.max(dp[i-1],arr[i]+dp[i-2]);
+        // }
+        // return dp[maxVal];
+
         // return solve(maxVal,arr,dp);
     }
 }
