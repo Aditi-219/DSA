@@ -24,18 +24,5 @@ class Solution {
         // int ans = Integer.MAX_VALUE;
         // for(int j = 0; j < n; j++) ans = Math.min(ans, dp[n-1][j]);
         // return ans;
-
-
-        // int row = triangle.size();
-        // int[] dp = new int[row];
-        // for (int i = 0; i < row; i++) {
-        //     dp[i] = triangle.get(row - 1).get(i);
-        // }
-        // for (int r = row-2; r >= 0; r--) {
-        //     for (int c = 0; c <= r; c++) {
-        //         dp[c] =triangle.get(r).get(c) + Math.min(dp[c], dp[c+1]);
-        //     }
-        // }
-        // return dp[0];        
     }
 }
