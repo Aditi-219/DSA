@@ -1,12 +1,12 @@
 class Solution {
     public int minCost(int n, int[][] edges) {
         List<List<int[]>> graph=new ArrayList<>();
-        for(int i=0;i<=n;i++) graph.add(new ArrayList<>());
+        for(int i=0;i<n;i++) graph.add(new ArrayList<>());
         for(int edge[]:edges){
             graph.get(edge[0]).add(new int[]{edge[1],edge[2]});
             graph.get(edge[1]).add(new int[]{edge[0],edge[2]*2});
         }
-        int []dist=new int[n+1];
+        int []dist=new int[n];
         Arrays.fill(dist,Integer.MAX_VALUE);
         dist[0]=0;
         PriorityQueue<int[]>queue=new PriorityQueue<>((a,b)->a[0]-b[0]);
