@@ -11,15 +11,13 @@
 class Solution {
     public ListNode mergeInBetween(ListNode list1, int a, int b, ListNode list2) {
         ListNode curr=list1;
-        for(int i=1;i<a;i++) curr=curr.next;
-        ListNode h1=curr;
-        for(int i=a;i<=b;i++) curr=curr.next;
-        ListNode h2=curr.next;
-        curr.next=null;
-        h1.next=list2;
-        ListNode curr2=list2;
-        while(curr2.next!=null) curr2=curr2.next;
-        curr2.next=h2;
+        for(int i=0;i<a-1;i++) curr=curr.next;
+        ListNode curr2=list1;
+        for(int i=0;i<=b;i++) curr2=curr2.next;
+        
+        curr.next=list2;
+        while(list2.next!=null) list2=list2.next;
+        list2.next=curr2;
         return list1;
     }
 }
