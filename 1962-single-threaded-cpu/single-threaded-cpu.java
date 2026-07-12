@@ -1,32 +1,41 @@
 class Solution {
     public int[] getOrder(int[][] tasks) {
         int n = tasks.length;
-        int[] ans = new int[n];
-        int[][] extTasks = new int[n][3];
-        for(int i = 0; i < n; i++) {
-            extTasks[i][0] = i;
-            extTasks[i][1] = tasks[i][0];
-            extTasks[i][2] = tasks[i][1];
+        // Store (enqueueTime, processingTime, originalIndex)
+        int[][] sorted = new int[n][3];
+        for (int i = 0; i < n; i++) {
+            sorted[i] = new int[]{tasks[i][0], tasks[i][1], i};
         }
-        Arrays.sort(extTasks, (a,b)->a[1] - b[1]);
-        PriorityQueue<int[]> pq = new PriorityQueue<int[]>((a, b) -> a[2] == b[2] ? a[0] - b[0] : a[2] - b[2]);
-        int time = 0;
-        int ai = 0;
-        int ti = 0;
-        while(ai < n) {
-            while(ti < n && extTasks[ti][1] <= time) {
-                pq.offer(extTasks[ti++]);
-                
+        // Sort by enqueue time
+        Arrays.sort(sorted, (a, b) -> Integer.compare(a[0], b[0]));
+        // Min-heap: order by (processingTime, originalIndex)
+        PriorityQueue<int[]> heap = new PriorityQueue<>((a, b) -> {
+            if (a[1] != b[1]) return Integer.compare(a[1], b[1]);
+            return Integer.compare(a[2], b[2]);
+        });
+        int[] result = new int[n];
+        int resultIdx = 0;
+        int i = 0;
+        long currentTime = 0;
+        while (resultIdx < n) {
+            // Push all tasks that have arrived by currentTime
+            while (i < n && sorted[i][0] <= currentTime) {
+                heap.offer(sorted[i]);
+                i++;
             }
-            if(pq.isEmpty()) {
-                time = extTasks[ti][1];
-                continue;
+            if (heap.isEmpty()) {
+                // No available tasks, jump to next arrival
+                currentTime = sorted[i][0];
+                while (i < n && sorted[i][0] <= currentTime) {
+                    heap.offer(sorted[i]);
+                    i++;
+                }
             }
-            int[] bestFit = pq.poll();
-            ans[ai++] = bestFit[0];
-            time += bestFit[2];
+            // Process the task with shortest processing time
+            int[] task = heap.poll();
+            result[resultIdx++] = task[2];
+            currentTime += task[1];
         }
-        return ans;
+        return result;
     }
-    
 }
